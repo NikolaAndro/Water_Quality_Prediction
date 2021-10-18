@@ -7,3 +7,6 @@ List of methods used:
   - Gradient Boosting
   - Adaboost
   - XGBoost
+  - Radial basis function
+  - Multilayer perceptron 
+  - Multiple linear regression
