@@ -3,7 +3,8 @@
 Objective: Predict water quality using multiple models produced using different methods, and finally compare the results.
 
 List of methods used:
-  - Recurrent Neural Network
+  - Convolutional Neural Network
+  - Image Segmentation
   - Gradient Boosting
   - Adaboost
   - XGBoost
