@@ -1,7 +1,7 @@
 ##
 ## Programmer: Nikola Andric
 ## Email: namdd@mst.edu
-## Last Eddited: 10/29/2021
+## Last Eddited: 11/06/2021
 ##
 ##
 
@@ -20,6 +20,7 @@ from sklearn.utils import shuffle
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
+from sklearn.metrics import mean_squared_error
 
 train_labels = []
 train_samples = []
@@ -27,7 +28,7 @@ train_samples = []
 
 
 my_dataset = pd.read_csv(
-    r'./preprocessed_dataset.csv',
+    r'./waters_datasets/Merged_Dataset_For_Trainging.csv',
     usecols=[
         "DO","PH","Conductivity","BOD","NI","Fec_col","Tot_col","WQI","WQI clf"
     ]
@@ -65,21 +66,8 @@ model = Sequential([
     Dense(units = 32, activation = 'swish'),
     Dense(units = 16, activation = 'swish'),
     Dense(units = 8, activation = 'swish'),
-    # Dense(units = 16, activation = 'swish'),
-    # Dense(units = 32, activation = 'swish'),
-    # Dense(units = 24, activation = 'swish'),
-    # Dense(units = 14, activation = 'swish'),
-    # Dense(units = 32, activation = 'swish'),
-    # Dense(units = 23, activation = 'swish'),
-    # Dense(units = 32, activation = 'swish'),
-    # Dense(units = 16, activation = 'swish'),
-    # Dense(units = 10, activation = 'swish'),
-    # Dense(units = 20, activation = 'swish'),
-    # Dense(units = 16, activation = 'swish'),
     Dense(units = 1, activation='linear')
 ])
-
-#model.summary()
 
 #prepare the model for training
 # optimizer: adam
@@ -88,7 +76,7 @@ model = Sequential([
 model.compile(optimizer="adam", loss='mean_absolute_error', metrics=['accuracy'])
 
 #fitting the data
-model.fit(x_train, y_train, epochs = 1700, batch_size = 80)
+model.fit(x_train, y_train, epochs = 900, batch_size = 80)
 
 #print(model.predict(x_test))
 prediction = model.predict(x_test)
@@ -100,26 +88,32 @@ print(model.predict(x_test))
 #x_test true values
 print(mean_absolute_error(y_test,prediction))
 
+#Root mean square error
+rmse = mean_squared_error(y_test, prediction, squared=False)
+print("RMSE: ", rmse)
+
 prediction_1d = prediction.ravel() #convert ndarray to a regular array
 d = {'WQI_predict': prediction_1d, 'True_WQI': y_test}
 df_check = pd.DataFrame(data= d)
 df_check.to_csv("check_regression_redone.csv")
 
+print(type(prediction_1d))
 
-# plt.plot(prediction)
-# plt.plot(y_test)
-# plt.show()
+plt.plot(prediction)
+plt.plot(y_test.tolist())
+plt.show()
 
 WQI_range = []
-for i in prediction:
-    if i[0] < 26:
-        WQI_range.append(0)
-    elif i[0] <51:
-        WQI_range.append(1)
-    elif i[0] < 76:
-        WQI_range.append(2)
-    else:
+list_prediction = prediction_1d.tolist()
+for i in range (0, len(list_prediction)):
+    if list_prediction[i] < 26:
         WQI_range.append(3)
+    elif list_prediction[i] <51:
+        WQI_range.append(2)
+    elif list_prediction[i] < 76:
+        WQI_range.append(1)
+    else:
+        WQI_range.append(0)
 
 d = {'WQI_predict_range': WQI_range, 'True_WQI_range': x_test_WQI_clf}
 df_range_check = pd.DataFrame(data = d)
@@ -128,6 +122,6 @@ df_range_check.to_csv("check_range_redone.csv")
 #compare ranges column
 print("the meaan absolute error btw ranges is: ", mean_absolute_error(WQI_range,x_test_WQI_clf))
 
-# plt.plot(WQI_range)
-# plt.plot(x_test_WQI_clf)
-# plt.show()
+plt.plot(WQI_range)
+plt.plot(x_test_WQI_clf.to_list())
+plt.show()
