@@ -102,6 +102,7 @@ print(type(prediction_1d))
 plt.plot(prediction)
 plt.plot(y_test.tolist())
 plt.show()
+plt.savefig('figures/regression.png')
 
 WQI_range = []
 list_prediction = prediction_1d.tolist()
@@ -125,3 +126,4 @@ print("the meaan absolute error btw ranges is: ", mean_absolute_error(WQI_range,
 plt.plot(WQI_range)
 plt.plot(x_test_WQI_clf.to_list())
 plt.show()
+plt.savefig('figures/ranges.png')
