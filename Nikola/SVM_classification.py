@@ -1,3 +1,10 @@
+##
+## Programmer: Nikola Andric
+## Email: namdd@mst.edu
+## Last Eddited: 11/07/2021
+##
+##
+
 from sklearn import svm
 from sklearn.metrics import accuracy_score
 import pandas as pd 
@@ -20,9 +27,9 @@ x = my_dataset[["DO","PH","Conductivity","BOD","NI","Fec_col","Tot_col","WQI clf
 y = my_dataset["WQI clf"]
 
 # normalize
-scaler = StandardScaler()
+# scaler = StandardScaler()
 
-x = scaler.fit_transform(x)
+# x = scaler.fit_transform(x)
 
 x_train, x_test, y_train, y_test = train_test_split(x,y,test_size = 0.2, random_state = 1)
 
@@ -37,6 +44,7 @@ prediction = clf.predict(x_test)
 print(accuracy_score(y_test, prediction))
 
 
+#hypertuning
 def svc_param_selection(X, y, nfolds):
     Cs = [0.1, 1, 10,100]
     gammas = [0.0001,0.001, 0.01, 0.1, 1, 10, 10]
