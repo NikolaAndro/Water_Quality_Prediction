@@ -99,6 +99,7 @@ df_check.to_csv("check_regression_redone.csv")
 
 print(type(prediction_1d))
 
+plt.ylim(0, 1000)
 plt.plot(prediction)
 plt.plot(y_test.tolist())
 plt.savefig('figures/regression.png')
