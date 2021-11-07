@@ -21,6 +21,7 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 from sklearn.metrics import mean_squared_error
+import keras_tuner as kt
 
 train_labels = []
 train_samples = []
@@ -58,28 +59,65 @@ print("Number of GPUs available: ",len(physical_devices))
 #print(my_dataset.head())
 print(my_dataset.shape)
 
+#Use the hp argument to define the hyperparameters during model creation.
+def build_model(hp):
+    model = keras.Sequential()
+    model.add(keras.layers.Dense(
+        hp.Choice('units', [8, 16, 32, 64, 128, 256]),
+        activation='relu'))
+    model.add(keras.layers.Dense(
+      hp.Choice('units', [8, 16, 32, 64, 128, 256]),
+      activation='relu'))
+    model.add(keras.layers.Dense(
+      hp.Choice('units', [8, 16, 32, 64, 128, 256]),
+      activation='relu'))
+    model.add(keras.layers.Dense(
+      hp.Choice('units', [8, 16, 32, 64, 128, 256]),
+      activation='relu'))
+    model.add(keras.layers.Dense(
+      hp.Choice('units', [8, 16, 32, 64, 128, 256]),
+      activation='relu'))
+    model.add(keras.layers.Dense(1, activation='linear'))
+    model.compile(loss='mse')
+    return model
+
+
+tuner = kt.RandomSearch(
+    build_model,
+    objective='val_loss',
+    max_trials=20)
+
+tuner.search(x_train, y_train, epochs=500, validation_data=(x_test, y_test))
+model = tuner.get_best_models()[0]
+
 #Building a sequential model
 #activation functions for regression: 
-model = Sequential([
-    Dense(units = 128, input_dim = 7, activation = 'swish'),
-    Dense(units = 64, activation = 'swish'),
-    Dense(units = 32, activation = 'swish'),
-    Dense(units = 16, activation = 'swish'),
-    Dense(units = 8, activation = 'swish'),
-    Dense(units = 1, activation='linear')
-])
+# model = Sequential([
+#     Dense(units = 128, input_dim = 7, activation = 'relu'),
+#     Dense(units = 64, activation = 'relu'),
+#     Dense(units = 32, activation = 'relu'),
+#     Dense(units = 16, activation = 'relu'),
+#     Dense(units = 8, activation = 'relu'),
+#     Dense(units = 1, activation='linear')
+# ])
 
-#prepare the model for training
-# optimizer: adam
-# metrics: accuracy, recall, precision
-# loss: mse, mean_absolute_error MeanSquaredError class, MeanAbsoluteError class, CosineSimilarity class
-model.compile(optimizer="adam", loss='mean_absolute_error', metrics=['accuracy'])
 
-#fitting the data
-model.fit(x_train, y_train, epochs = 900, batch_size = 80)
 
-#print(model.predict(x_test))
+# #prepare the model for training
+# # optimizer: adam
+# # metrics: accuracy, recall, precision
+# # loss: mse, mean_absolute_error MeanSquaredError class, MeanAbsoluteError class, CosineSimilarity class
+# model.compile(optimizer="adam", loss='mean_absolute_error', metrics=['accuracy'])
+
+# #fitting the data
+# model.fit(x_train, y_train, epochs = 900, batch_size = 80)
+
+# #print(model.predict(x_test))
 prediction = model.predict(x_test)
+
+
+
+
 from sklearn.metrics import mean_absolute_error
 #this has to be close to 0
 print(model.predict(x_test))
@@ -124,9 +162,7 @@ df_range_check.to_csv("check_range_redone.csv")
 
 #compare ranges column
 print("the meaan absolute error btw ranges is: ", mean_absolute_error(WQI_range,x_test_WQI_clf))
-#Root mean square error
-rmse = mean_squared_error(WQI_range, x_test_WQI_clf, squared=False)
-print("RMSE for classification: ", rmse)
+
 
 plt.plot(WQI_range)
 plt.plot(x_test_WQI_clf.to_list())
