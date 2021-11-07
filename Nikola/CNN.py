@@ -124,6 +124,9 @@ df_range_check.to_csv("check_range_redone.csv")
 
 #compare ranges column
 print("the meaan absolute error btw ranges is: ", mean_absolute_error(WQI_range,x_test_WQI_clf))
+#Root mean square error
+rmse = mean_squared_error(WQI_range, x_test_WQI_clf, squared=False)
+print("RMSE for classification: ", rmse)
 
 plt.plot(WQI_range)
 plt.plot(x_test_WQI_clf.to_list())
