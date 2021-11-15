@@ -63,20 +63,23 @@ print(my_dataset.shape)
 def build_model(hp):
     model = keras.Sequential()
     model.add(keras.layers.Dense(
-        hp.Choice('units', [8, 16, 32, 64, 128, 256]),
+        hp.Choice('units', [8, 16, 32, 64, 128, 256, 512]),
         activation='relu'))
     model.add(keras.layers.Dense(
-      hp.Choice('units', [8, 16, 32, 64, 128, 256]),
+      hp.Choice('units', [8, 16, 32, 64, 128, 256, 512]),
       activation='relu'))
     model.add(keras.layers.Dense(
-      hp.Choice('units', [8, 16, 32, 64, 128, 256]),
+      hp.Choice('units', [8, 16, 32, 64, 128, 256, 512]),
       activation='relu'))
     model.add(keras.layers.Dense(
-      hp.Choice('units', [8, 16, 32, 64, 128, 256]),
+      hp.Choice('units', [8, 16, 32, 64, 128, 256,  512]),
       activation='relu'))
     model.add(keras.layers.Dense(
-      hp.Choice('units', [8, 16, 32, 64, 128, 256]),
+      hp.Choice('units', [8, 16, 32, 64, 128, 256, 512]),
       activation='relu'))
+   
+    
+    
     model.add(keras.layers.Dense(1, activation='linear'))
     model.compile(loss='mse')
     return model
