@@ -8,3 +8,5 @@ This folder contains code to visually represent the water quality predictions on
 - good: blue
 - bad: orange
 - very bad: red
+
+![visualisation](segmentedImage.jpg "visualization")
