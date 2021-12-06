@@ -9,4 +9,6 @@ This folder contains code to visually represent the water quality predictions on
 - bad: orange
 - very bad: red
 
+There is a small offset due to the curves on the planet, which can be fixed, but in this case is not.
+
 ![visualisation](segmentedImage.jpg "visualization")
