@@ -27,16 +27,32 @@ train_labels = []
 train_samples = []
 
 
-
-my_dataset = pd.read_csv(
-    r'./waters_datasets/Merged_Dataset_For_Trainging.csv',
+# read in the file
+training_dataset = pd.read_csv(
+    r'./waters_datasets/Cleaned_Datasets/Merged_Dataset_For_Trainging.csv',
     usecols=[
         "DO","PH","Conductivity","BOD","NI","Fec_col","Tot_col","WQI","WQI clf"
     ]
 )[["DO","PH","Conductivity","BOD","NI","Fec_col","Tot_col","WQI","WQI clf"]]
 
-x = my_dataset[["DO","PH","Conductivity","BOD","NI","Fec_col","Tot_col","WQI clf"]]
-y = my_dataset["WQI"]
+x_train = training_dataset[["DO","PH","Conductivity","BOD","NI","Fec_col","Tot_col","WQI clf"]]
+y = training_dataset["WQI"]
+
+
+# Testing dataset 1
+testing_dataset_1 = pd.read_csv(r'./waters_datasets/Cleaned_Datasets/testing_data_1.csv',
+    usecols=[
+        "DO","PH","Conductivity","BOD","NI","Fec_col","Tot_col","WQI","WQI clf"
+    ]
+)[["DO","PH","Conductivity","BOD","NI","Fec_col","Tot_col","WQI","WQI clf"]]
+
+# Teseting dataset 2 
+testing_dataset_2 = pd.read_csv(r'./waters_datasets/Cleaned_Datasets/testing_data_2.csv',
+    usecols=[
+        "DO","PH","Conductivity","BOD","NI","Fec_col","Tot_col","WQI","WQI clf"
+    ]
+)[["DO","PH","Conductivity","BOD","NI","Fec_col","Tot_col","WQI","WQI clf"]]
+
 
 x_train, x_test, y_train, y_test = train_test_split(x,y,test_size = 0.2, random_state = 1)
 
@@ -47,17 +63,17 @@ x_test_WQI_clf = x_test['WQI clf']
 del x_train['WQI clf']
 del x_test['WQI clf']
 
-print(my_dataset.head())
+print(training_dataset.head())
 
 # Running the code on the GPU. Making sure tensorflow is correctly identifying the GPU as well as enable memory growth
 physical_devices = tf.config.experimental.list_physical_devices('GPU')
 print("Number of GPUs available: ",len(physical_devices))
 #tf.config.experimental.set_memory_growth(physical_devices[0],True)
 
-#np.array(my_dataset)
+#np.array(training_dataset)
 
-#print(my_dataset.head())
-print(my_dataset.shape)
+#print(training_dataset.head())
+print(training_dataset.shape)
 
 #Use the hp argument to define the hyperparameters during model creation.
 def build_model(hp):
@@ -93,29 +109,6 @@ tuner = kt.RandomSearch(
 tuner.search(x_train, y_train, epochs=500, validation_data=(x_test, y_test))
 model = tuner.get_best_models()[0]
 
-#Building a sequential model
-#activation functions for regression: 
-# model = Sequential([
-#     Dense(units = 128, input_dim = 7, activation = 'relu'),
-#     Dense(units = 64, activation = 'relu'),
-#     Dense(units = 32, activation = 'relu'),
-#     Dense(units = 16, activation = 'relu'),
-#     Dense(units = 8, activation = 'relu'),
-#     Dense(units = 1, activation='linear')
-# ])
-
-
-
-# #prepare the model for training
-# # optimizer: adam
-# # metrics: accuracy, recall, precision
-# # loss: mse, mean_absolute_error MeanSquaredError class, MeanAbsoluteError class, CosineSimilarity class
-# model.compile(optimizer="adam", loss='mean_absolute_error', metrics=['accuracy'])
-
-# #fitting the data
-# model.fit(x_train, y_train, epochs = 900, batch_size = 80)
-
-# #print(model.predict(x_test))
 prediction = model.predict(x_test)
 
 
