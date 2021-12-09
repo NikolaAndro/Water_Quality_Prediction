@@ -16,6 +16,8 @@ import matplotlib.pyplot as plt
 from sklearn.metrics import mean_squared_error
 import keras_tuner as kt
 
+from sklearn.metrics import mean_absolute_error
+
 train_labels = []
 train_samples = []
 
@@ -45,7 +47,7 @@ testing_dataset_1 = pd.read_csv(r'./waters_datasets/Cleaned_Datasets/testing_dat
 x_test_1 = testing_dataset_1[["DO","PH","Conductivity","BOD","NI","Fec_col","Tot_col"]]
 
 # testing cloumns for y
-y_test_1 = y = testing_dataset_1["WQI"]
+y_test_1 = testing_dataset_1["WQI"]
 
 
 
@@ -87,5 +89,14 @@ tuner.search(x_train, y_train, epochs=500, validation_data=(x_test_1, y_test_1))
 model = tuner.get_best_models()[0]
 
 prediction = model.predict(x_test_1)
+
+# Save the predictinos into a csv file so you can add them to the orginal file.
+np.savetxt("predictions_CNN_test_1.csv", prediction)
+
+#Root mean square error
+rmse = np.sqrt(mean_squared_error(y_test_1, prediction, squared=False))
+print("RMSE: ", rmse)
+
+
 
 
