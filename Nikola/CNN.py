@@ -26,7 +26,6 @@ import keras_tuner as kt
 train_labels = []
 train_samples = []
 
-
 # read in the file
 training_dataset = pd.read_csv(
     r'./waters_datasets/Cleaned_Datasets/Merged_Dataset_For_Trainging.csv',
