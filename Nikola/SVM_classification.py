@@ -72,5 +72,7 @@ print("The accuracy score after hypertuning is: ",accuracy_score(y_test, pred))
 
 print (confusion_matrix(y_test, pred))
 
+pred = pred.astype(int)
+
 # Save the predictinos into a csv file so you can add them to the orginal file.
 np.savetxt("predictions_SVM_test_1.csv", pred)
