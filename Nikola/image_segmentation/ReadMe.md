@@ -15,4 +15,6 @@ There is a small offset due to the curves on the planet, which can be fixed, but
 
 To be able to do this, we first added the longitude and latitude to each station in the predicted dataset  using code_stations_processing notebook.
 
+#NOTE: Min and max longitude nad latitude are gotten from openstreetmaps.
+
 Once that is done, we can feed the output/dataset with coordinates into the full_segmentation notebook that will result in an image.
